@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  book: one
+  review: MyString
+  score: 
+  number_of_upvotes: 
+
+two:
+  book: two
+  review: MyString
+  score: 
+  number_of_upvotes: 

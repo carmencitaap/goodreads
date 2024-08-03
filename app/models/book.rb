@@ -6,4 +6,5 @@ class Book
   field :date_of_publication, type: String
   
   belongs_to :author
+  has_many :reviews
 end
