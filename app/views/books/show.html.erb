@@ -1,0 +1,19 @@
+<p style="color: green"><%= notice %></p>
+
+<%= render @book %>
+
+<div>
+  <h1>Book Details</h1>
+
+  <ul>
+    <li> Title: <%= @book.title %> </li>
+    <li> Author: <%= @book.author.name %> </li>
+    <li> Summary: <%= @book.summary %> </li>
+    <li> Publish date: <%= @book.date_of_publication %> </li>
+  </ul>
+
+  <%= link_to "Edit this book", edit_book_path(@book) %> |
+  <%= link_to "Back to books", books_path %>
+
+  <%= button_to "Destroy this book", @book, method: :delete, class: "btn btn-danger" %>
+</div>

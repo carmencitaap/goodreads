@@ -5,4 +5,6 @@ class Author
   field :date_of_birth, type: Date
   field :country_of_origin, type: String
   field :short_description, type: String
+
+  has_many :books, dependent: :destroy
 end
