@@ -1,0 +1,16 @@
+<table>
+    <tr>
+        <th>Author</th>
+        <th>Number of Books</th>
+        <th>Average Score</th>
+        <th>Total of Sales</th>
+    </tr>
+    <% @stats.each do |stat| %>
+        <tr>
+        <td><%= stat['name'] %></td>
+        <td><%= stat['number_of_books'] %></td>
+        <td><%= stat['average_score'] %></td>
+        <td><%= stat['total_sales'] %></td>
+        </tr>
+    <% end %>
+</table>

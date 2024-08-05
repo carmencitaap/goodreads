@@ -13,4 +13,7 @@ Rails.application.routes.draw do
   root "pages#home"
 
   resources :authors
+
+  get 'authors_stats', to: 'authors#authors_stats', as: 'stats'
+  get 'top_10_rated_books', to: 'books#top_10_rated_books', as: 'top_10_rated_books'
 end

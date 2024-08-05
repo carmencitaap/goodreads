@@ -1,0 +1,12 @@
+qsdadacwdsaaaaaaaaaaaaaaa
+
+<%= @top_books.each do |book| %>
+
+    <div class="book">
+        <h2><%= book.title %></h2>
+        <p><%= book.summary %></p>
+        <p><%= book.date_of_publication %></p>
+        <p><%= book.author_id %></p>
+        <p><%= book.average_score %></p>
+    </div>
+<% end %>

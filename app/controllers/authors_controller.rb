@@ -57,6 +57,50 @@ class AuthorsController < ApplicationController
     end
   end
 
+  def authors_stats
+    @stats = Author.collection.aggregate([
+      {
+        '$lookup': {
+          'from': 'books',
+          'localField': '_id',
+          'foreignField': 'author_id',
+          'as': 'books'
+        }
+      },
+      {
+        '$lookup': {
+          'from': 'reviews',
+          'localField': 'books._id',
+          'foreignField': 'book_id',
+          'as': 'reviews'
+        }
+      },
+      {
+        '$lookup': {
+          'from': 'sales',
+          'localField': 'books._id',
+          'foreignField': 'book_id',
+          'as': 'sales'
+        }
+      },
+      {
+        '$project': {
+          'name': 1,
+          'number_of_books': {
+            '$size': '$books'
+          },
+          'average_score': {
+            '$avg': '$reviews.score'
+          },
+          'total_sales': {
+            '$size': '$sales'
+          }
+        }
+      }
+    ])
+  
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_author

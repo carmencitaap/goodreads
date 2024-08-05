@@ -57,6 +57,40 @@ class BooksController < ApplicationController
     end
   end
 
+  def top_10_rated_books
+    @top_books = Book.collection.aggregate([
+      {
+        '$lookup': {
+          'from': 'reviews',
+          'localField': '_id',
+          'foreignField': 'book_id',
+          'as': 'reviews'
+        }
+      },
+      {
+        "$unwind": "$reviews"
+      },
+      {
+        "$group": {
+          _id: '$_id',
+          title: { "$first": '$title' },
+          summary: { "$first": '$summary' },
+          date_of_publication: { "$first": '$date_of_publication' },
+          author_id: { "$first": '$author_id' },
+          average_score: { "$avg": '$reviews.score' }
+        }
+      },
+      {
+        "$sort": { average_score: -1 }
+      },
+      {
+        "$limit": 10
+      }
+    ])
+
+    render json: @top_books
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_book
