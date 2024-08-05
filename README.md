@@ -1,24 +1,40 @@
-# README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+# Goodreads
 
-Things you may want to cover:
+## Software Architecture 2024-20 Group 3
 
-* Ruby version
+Members:
 
-* System dependencies
+- Carmencita Avendaño P.
+- Nicolás Brito F.
+- Victoria Guerriero B.
 
-* Configuration
+## Application
 
-* Database creation
+This is a Goodreads like application, where you can make a review for a specific book. It has the following schema:
 
-* Database initialization
+1. Authors:
+    - name (INT)
+    - date_of_birth (DATE)
+    - country_of_origin (CHAR)
+    - short_description (CHAR)
 
-* How to run the test suite
+2. Books:
+    - title (CHAR)
+    - summary (CHAR)
+    - date_of_publication (DATE)
+    - author_id (CHAR)
 
-* Services (job queues, cache servers, search engines, etc.)
+3. Reviews:
+    - review (CHAR)
+    - score (INT)
+    - upvote (BOOL)
+    - book_id (CHAR)
 
-* Deployment instructions
+4. Sales:
+    - book_id (CHAR)
+    - year (INT)
 
-* ...
+## Architecture
+
+This app is developed with the framework [Ruby on Rails](https://rubyonrails.org/), with a [MongoDB](https://www.mongodb.com/) database.
