@@ -1,12 +1,28 @@
-qsdadacwdsaaaaaaaaaaaaaaa
-
-<%= @top_books.each do |book| %>
-
-    <div class="book">
-        <h2><%= book.title %></h2>
-        <p><%= book.summary %></p>
-        <p><%= book.date_of_publication %></p>
-        <p><%= book.author_id %></p>
-        <p><%= book.average_score %></p>
-    </div>
-<% end %>
+<!-- app/views/books/top_10_rated_books.html.erb -->
+<div class="container mt-5">
+  <h1 class="mb-4">Top 10 Rated Books</h1>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Title</th>
+        <th scope="col">Summary</th>
+        <th scope="col">Date of Publication</th>
+        <th scope="col">Author</th>
+        <th scope="col">Average Score</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @top_books.each_with_index do |book, index| %>
+        <tr>
+          <th scope="row"><%= index + 1 %></th>
+          <td><%= link_to book['title'], book_path(book['_id']) %></td>
+          <td><%= book['summary'] %></td>
+          <td><%= book['date_of_publication'].to_date %></td>
+          <td><%= book['author_name'] %></td>
+          <td><%= book['average_score'] %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
