@@ -1,0 +1,19 @@
+<%= form_tag search_path, method: :get do %>
+    <%= text_field_tag :query, params[:query], placeholder: "Search by summary..." %>
+    <%= submit_tag "Search!" %>
+  <% end %>
+  
+<h1>Results</h1>
+
+<% if @books.any? %>
+<ul>
+    <% @books.each do |book| %>
+    <li>
+        <strong><%= book.title %></strong><br>
+        <%= book.summary %>
+    </li>
+    <% end %>
+</ul>
+<% else %>
+<p>No books found</p>
+<% end %>
