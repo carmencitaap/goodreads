@@ -14,6 +14,9 @@ Rails.application.routes.draw do
 
   resources :authors
 
+  get 'search', to: 'search#index', as: 'search'
+
   get 'authors_stats', to: 'authors#authors_stats', as: 'stats'
   get 'top_10_rated_books', to: 'books#top_10_rated_books', as: 'top_10_rated_books'
+  get 'top_50_selling_books', to: 'books#top_50_selling_books', as: 'top_50_selling_books'
 end
