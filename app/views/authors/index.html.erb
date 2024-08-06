@@ -5,6 +5,7 @@
 <table class="table">
   <thead>
     <tr>
+      <th scope="col">#</th>
       <th scope="col">Name</th>
       <th scope="col">View Details</th>
       <th scope="col">Edit</th>
@@ -12,15 +13,18 @@
     </tr>
   </thead>
   <tbody>
-    <% @authors.each do |author| %>
+    <% @authors.each_with_index do |author, index| %>
       <tr>
+        <td><%= index + 1 + (params[:page].to_i - 1) * 10 %></td>
         <td><%= author.name %></td>
         <td><%= link_to "View Details", author, class: "btn btn-primary" %></td>
         <td><%= link_to "Edit", edit_author_path(author), class: "btn btn-secondary" %></td>
-        <td><%= button_to "Delete", author, method: :delete, data: { confirm: "Are you sure?" } , class: "btn btn-danger"%></td>
+        <td><%= button_to "Delete", author, method: :delete, data: { confirm: "Are you sure?" }, class: "btn btn-danger" %></td>
       </tr>
     <% end %>
   </tbody>
 </table>
 
-<%= link_to "New author", new_author_path, class: "btn btn-primary"%>
+<%= link_to "New author", new_author_path, class: "btn btn-primary" %>
+
+
