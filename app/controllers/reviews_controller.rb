@@ -3,7 +3,11 @@ class ReviewsController < ApplicationController
 
   # GET /reviews or /reviews.json
   def index
-    @reviews = Review.all
+    #@reviews = Review.all
+    per_page = 10
+    @current_page = params[:page].to_i > 0 ? params[:page].to_i : 1
+    @reviews = Review.limit(per_page).offset((@current_page - 1) * per_page)
+    @total_reviews = Review.count
   end
 
   # GET /reviews/1 or /reviews/1.json

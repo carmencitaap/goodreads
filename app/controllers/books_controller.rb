@@ -3,7 +3,13 @@ class BooksController < ApplicationController
 
   # GET /books or /books.json
   def index
-    @books = Book.all
+    #@books = Book.all
+    per_page = 10
+    page = (params[:page] || 1).to_i
+    offset = (page - 1) * per_page
+
+    @total_books = Book.count
+    @books = Book.limit(per_page).offset(offset)
   end
 
   # GET /books/1 or /books/1.json
@@ -106,7 +112,6 @@ class BooksController < ApplicationController
   end
 
   def top_50_selling_books
-    # Step 1: Aggregate total sales for each book
     book_sales = Book.collection.aggregate([
       {
         '$lookup': {
@@ -126,14 +131,11 @@ class BooksController < ApplicationController
           summary: { "$first": '$summary' },
           date_of_publication: { "$first": '$date_of_publication' },
           author_id: { "$first": '$author_id' },
-          total_sales: { "$sum": '$sales.quantity' } # Ensure 'quantity' field is correct
+          total_sales: { "$sum": 1 } 
         }
       }
     ])
-
-    Rails.logger.debug "book_sales: #{book_sales.inspect}"
   
-    # Step 2: Aggregate total sales for each author
     author_sales = Author.collection.aggregate([
       {
         '$lookup': {
@@ -161,14 +163,11 @@ class BooksController < ApplicationController
         "$group": {
           _id: '$_id',
           name: { "$first": '$name' },
-          total_author_sales: { "$sum": '$sales.quantity' } # Ensure 'quantity' field is correct
+          total_author_sales: { "$sum": 1 }
         }
       }
     ])
 
-    Rails.logger.debug "author_sales: #{author_sales.inspect}"
-  
-    # Step 3: Find the top 5 selling books for the year of publication for each book
     top_books_by_year = Book.collection.aggregate([
       {
         '$lookup': {
@@ -191,10 +190,10 @@ class BooksController < ApplicationController
       {
         "$group": {
           _id: {
-            year: { "$year": "$date_of_publication" },
+            year: "$sales.year", 
             book_id: '$_id'
           },
-          total_sales: { "$sum": '$sales.quantity' } # Ensure 'quantity' field is correct
+          total_sales: { "$sum": 1 } 
         }
       },
       {
@@ -218,16 +217,12 @@ class BooksController < ApplicationController
         }
       }
     ])
-
-    Rails.logger.debug "top_books_by_year: #{top_books_by_year.inspect}"
   
-    # Convert author sales to a hash for quick lookup
     author_sales_hash = author_sales.reduce({}) do |hash, author|
       hash[author['_id']] = author['total_author_sales']
       hash
     end
   
-    # Convert top books by year to a hash for quick lookup
     top_books_by_year_hash = top_books_by_year.reduce({}) do |hash, year_data|
       year_data['top_books'].each do |book_data|
         hash[book_data['book_id']] ||= []
@@ -236,7 +231,6 @@ class BooksController < ApplicationController
       hash
     end
   
-    # Fetch author names and combine all data
     @top_books = book_sales.map do |book|
       author = Author.collection.find(_id: book['author_id']).first
       publication_year = Date.parse(book['date_of_publication']).year
@@ -258,7 +252,6 @@ class BooksController < ApplicationController
       format.json { render json: @top_books }
     end
   end
-  
 
   private
 

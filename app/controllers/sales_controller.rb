@@ -3,7 +3,11 @@ class SalesController < ApplicationController
 
   # GET /sales or /sales.json
   def index
-    @sales = Sale.all
+    #@sales = Sale.all
+    per_page = 10
+    @current_page = params[:page].to_i > 0 ? params[:page].to_i : 1
+    @sales = Sale.limit(per_page).offset((@current_page - 1) * per_page)
+    @total_sales = Sale.count
   end
 
   # GET /sales/1 or /sales/1.json

@@ -1,25 +1,25 @@
 class AuthorsController < ApplicationController
   before_action :set_author, only: %i[ show edit update destroy ]
 
-  # GET /authors or /authors.json
   def index
-    @authors = Author.all
+    per_page = 10
+    page = (params[:page] || 1).to_i
+    offset = (page - 1) * per_page
+
+    @total_authors = Author.count
+    @authors = Author.limit(per_page).offset(offset)
   end
 
-  # GET /authors/1 or /authors/1.json
   def show
   end
 
-  # GET /authors/new
   def new
     @author = Author.new
   end
 
-  # GET /authors/1/edit
   def edit
   end
 
-  # POST /authors or /authors.json
   def create
     @author = Author.new(author_params)
 
@@ -34,7 +34,6 @@ class AuthorsController < ApplicationController
     end
   end
 
-  # PATCH/PUT /authors/1 or /authors/1.json
   def update
     respond_to do |format|
       if @author.update(author_params)
@@ -47,7 +46,6 @@ class AuthorsController < ApplicationController
     end
   end
 
-  # DELETE /authors/1 or /authors/1.json
   def destroy
     @author.destroy!
 
@@ -101,13 +99,12 @@ class AuthorsController < ApplicationController
   
   end
 
+
   private
-    # Use callbacks to share common setup or constraints between actions.
     def set_author
       @author = Author.find(params[:id])
     end
 
-    # Only allow a list of trusted parameters through.
     def author_params
       params.require(:author).permit(:name, :date_of_birth, :country_of_origin, :short_description)
     end
