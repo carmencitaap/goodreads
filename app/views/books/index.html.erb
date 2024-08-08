@@ -2,7 +2,9 @@
 
 <h1 style="margin-left: 10px">Books</h1>
 
-<div id="books" class="row" style="margin-left: 10px">
+<%= link_to "New book", new_book_path, class: "btn btn-success" %>
+
+<div id="books" class="row" style="margin-left: 10px; margin-top: 5px">
   <% @books.each_with_index do |book, index| %>
     <div class="col-md-3 mb-4">
       <div class="card" style="width: 100%;">
@@ -29,8 +31,6 @@
     <%= link_to "Next", books_path(page: params[:page].to_i + 1), class: "btn btn-primary" %>
   <% end %>
 </div>
-
-<%= link_to "New book", new_book_path, class: "btn btn-success" %>
 
 <style>
 #books 

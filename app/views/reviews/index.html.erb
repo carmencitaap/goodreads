@@ -2,6 +2,8 @@
 
 <h1 style="margin-left: 10px">Reviews</h1>
 
+<%= link_to "New review", new_review_path, class: "btn btn-success mt-4" %>
+
 <div class="container my-4" style="margin-left: 10px">
   <div id="reviews" class="row">
     <% @reviews.each do |review| %>
@@ -29,8 +31,6 @@
       <%= link_to "Next", reviews_path(page: params[:page].to_i + 1), class: "btn btn-primary" %>
     <% end %>
   </div>
-
-  <%= link_to "New review", new_review_path, class: "btn btn-success mt-4" %>
 </div>
 
 <style>
@@ -43,11 +43,11 @@
 }
 
 .col-md-3 {
-  flex: 0 0 25%; /* Esto hace que cada columna ocupe el 25% del ancho del contenedor */
+  flex: 0 0 25%;
   max-width: 25%;
 }
 
 .card {
-  margin-bottom: 1rem; /* Espacio entre las filas de tarjetas */
+  margin-bottom: 1rem;
 }
 </style>

@@ -2,6 +2,8 @@
 
 <h1 style="margin-left: 10px">Sales</h1>
 
+<%= link_to "New sale", new_sale_path, class: "btn btn-success mt-4" %>
+
 <div class="container my-4" style="margin-left: 10px">
   <div id="sales" class="row">
     <% @sales.each do |sale| %>
@@ -28,8 +30,6 @@
       <%= link_to "Next", sales_path(page: @current_page.to_i + 1), class: "btn btn-primary" %>
     <% end %>
   </div>
-
-  <%= link_to "New sale", new_sale_path, class: "btn btn-success mt-4" %>
 </div>
 
 <style>
