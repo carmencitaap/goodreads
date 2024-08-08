@@ -38,3 +38,16 @@ This is a Goodreads like application, where you can make a review for a specific
 ## Architecture
 
 This app is developed with the framework [Ruby on Rails](https://rubyonrails.org/), with a [MongoDB](https://www.mongodb.com/) database.
+
+## How to run the application
+
+You must need to install Rails 7 and MongoDB in your computer.
+
+``` zsh
+bundle install
+rails db:drop
+rails db:create
+rails db:seed
+rails assets:precompile
+rails s
+``` 
