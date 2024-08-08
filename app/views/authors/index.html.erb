@@ -1,8 +1,8 @@
 <p style="color: green"><%= notice %></p>
 
-<h1>Authors</h1>
+<h1 style="margin-left: 10px">Authors</h1>
 
-<table class="table">
+<table class="table" style= "margin-left: 10px">
   <thead>
     <tr>
       <th scope="col">#</th>
@@ -13,18 +13,25 @@
     </tr>
   </thead>
   <tbody>
-    <% @authors.each_with_index do |author, index| %>
+    <% @authors.each_with_index do |autor, index| %>
       <tr>
         <td><%= index + 1 + (params[:page].to_i - 1) * 10 %></td>
-        <td><%= author.name %></td>
-        <td><%= link_to "View Details", author, class: "btn btn-primary" %></td>
-        <td><%= link_to "Edit", edit_author_path(author), class: "btn btn-secondary" %></td>
-        <td><%= button_to "Delete", author, method: :delete, data: { confirm: "Are you sure?" }, class: "btn btn-danger" %></td>
+
+        <td><%= autor.name %></td>
+        <td><%= link_to "View Details", autor, class: "btn btn-primary" %></td>
+        <td><%= link_to "Edit", edit_author_path(autor), class: "btn btn-secondary" %></td>
+        <td><%= button_to "Delete", autor, method: :delete, data: { confirm: "Are you sure?" }, class: "btn btn-danger" %></td>
       </tr>
     <% end %>
   </tbody>
 </table>
 
-<%= link_to "New author", new_author_path, class: "btn btn-primary" %>
+<div class="pagination">
+  <% if params[:page].to_i > 1 %>
+    <%= link_to "Previous", authors_path(page: params[:page].to_i - 1), class: "btn btn-primary" %>
+  <% end %>
 
-
+  <% if @total_authors > params[:page].to_i * 15 %>
+    <%= link_to "Next", authors_path(page: params[:page].to_i + 1), class: "btn btn-primary" %>
+  <% end %>
+</div>

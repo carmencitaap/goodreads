@@ -1,15 +1,59 @@
 <p style="color: green"><%= notice %></p>
 
-<h1>Sales</h1>
+<h1 style="margin-left: 10px">Sales</h1>
 
-<div id="sales">
-  <% @sales.each do |sale| %>
-    <%= render sale %>
-    <p>
-      <%= link_to sale.book.title, sale.book %> -
-      <%= link_to "Show this sale", sale %>
-    </p>
-  <% end %>
+<div class="container my-4" style="margin-left: 10px">
+  <div id="sales" class="row">
+    <% @sales.each do |sale| %>
+      <div class="col-md-3 mb-4">
+        <div class="card" style="width: 100%;">
+          <div class="card-body">
+            <h4 class="card-title">Sold Book</h4>
+            <h5 class="card-title"><%= link_to sale.book.title, sale.book %></h5>
+            <p class="card-text">
+              <%= link_to "Show this sale", sale, class: "btn btn-primary" %>
+            </p>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="pagination mt-4">
+    <% if @current_page.present? && @current_page > 1 %>
+      <%= link_to "Previous", sales_path(page: @current_page - 1), class: "btn btn-primary" %>
+    <% end %>
+
+    <% if @total_sales.present? && @total_sales > @current_page.to_i * 10 %>
+      <%= link_to "Next", sales_path(page: @current_page.to_i + 1), class: "btn btn-primary" %>
+    <% end %>
+  </div>
+
+  <%= link_to "New sale", new_sale_path, class: "btn btn-success mt-4" %>
 </div>
 
-<%= link_to "New sale", new_sale_path %>
+<style>
+.container {
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+#sales 
+{
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.col-md-3 {
+  flex: 0 0 25%;
+  max-width: 25%;
+}
+
+.card {
+  margin-bottom: 1rem;
+}
+
+.pagination {
+  text-align: center;
+}
+</style>

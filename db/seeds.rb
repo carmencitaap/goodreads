@@ -6,14 +6,13 @@ def random_date(start_year, end_year)
   (start_date + rand((end_date - start_date).to_i)).strftime('%Y-%m-%d')
 end
 
-# Limpia las colecciones
 Author.delete_all
 Book.delete_all
 Review.delete_all
 Sale.delete_all
 
 puts 'cleaned db'
-# Genera autores
+
 authors = []
 50.times do
   author = Author.create!(
@@ -25,7 +24,6 @@ authors = []
   authors << author
 end
 
-# Genera libros
 books = []
 300.times do
   book = Book.create!(
@@ -37,7 +35,6 @@ books = []
   books << book
 end
 
-# Genera reseñas
 books.each do |book|
   4.times do
     Review.create!(
@@ -49,15 +46,17 @@ books.each do |book|
   end
 end
 
-# Genera ventas
 years = (2019..2023).to_a
 books.each do |book|
   years.each do |year|
-    Sale.create!(
-      book_id: book.id,
-      year: year
-    )
+    random_sales_count = rand(5..50)
+    random_sales_count.times do
+      Sale.create!(
+        book_id: book.id,
+        year: year
+      )
+    end
   end
 end
 
-puts "Data has been successfully inserted into the MongoDB database."
+puts "Data has been successfully seeded."

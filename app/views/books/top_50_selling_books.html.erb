@@ -16,8 +16,12 @@
       <% @top_books.each_with_index do |book, index| %>
         <tr>
           <th scope="row"><%= index + 1 %></th>
-          <td><%= book[:title] %></td>
-          <td><%= book[:author_name] %></td>
+          <td>
+            <%= link_to book[:title], book_path(book[:id]) %>
+          </td>
+          <td>
+            <%= link_to book[:author_name], author_path(book[:author_id]) %>
+          </td>
           <td><%= book[:date_of_publication]%></td>
           <td><%= book[:total_sales] %></td>
           <td><%= book[:total_author_sales] %></td>

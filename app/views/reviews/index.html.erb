@@ -1,17 +1,53 @@
 <p style="color: green"><%= notice %></p>
 
-<h1>Reviews</h1>
+<h1 style="margin-left: 10px">Reviews</h1>
 
-<div id="reviews">
-  <% @reviews.each do |review| %>
-    <%= render review %>
-    <p>
-      <%= review.book.title %> |
-      <%= review.score %> ⭐ |
-      <%= review.upvote ? "👍" : "👎" %>
-      <%= link_to "Show this review", review %>
-    </p>
-  <% end %>
+<div class="container my-4" style="margin-left: 10px">
+  <div id="reviews" class="row">
+    <% @reviews.each do |review| %>
+      <div class="col-md-3 mb-4">
+        <div class="card" style="width: 100%;">
+          <div class="card-body">
+            <h5 class="card-title"><%= review.book.title %></h5>
+            <p class="card-text">
+              <strong>Score:</strong> <%= review.score %> ⭐<br>
+              <strong>Upvote:</strong> <%= review.upvote ? "👍" : "👎" %>
+            </p>
+            <%= link_to "Show this review", review, class: "btn btn-primary" %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="pagination mt-4">
+    <% if params[:page].to_i > 1 %>
+      <%= link_to "Previous", reviews_path(page: params[:page].to_i - 1), class: "btn btn-primary" %>
+    <% end %>
+
+    <% if @total_reviews > params[:page].to_i * 10 %>
+      <%= link_to "Next", reviews_path(page: params[:page].to_i + 1), class: "btn btn-primary" %>
+    <% end %>
+  </div>
+
+  <%= link_to "New review", new_review_path, class: "btn btn-success mt-4" %>
 </div>
 
-<%= link_to "New review", new_review_path, class:"btn btn-primary" %>
+<style>
+
+
+#reviews 
+{
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.col-md-3 {
+  flex: 0 0 25%; /* Esto hace que cada columna ocupe el 25% del ancho del contenedor */
+  max-width: 25%;
+}
+
+.card {
+  margin-bottom: 1rem; /* Espacio entre las filas de tarjetas */
+}
+</style>
