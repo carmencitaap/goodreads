@@ -41,13 +41,16 @@ This app is developed with the framework [Ruby on Rails](https://rubyonrails.org
 
 ## How to run the application
 
-You must need to install Rails 7 and MongoDB in your computer.
+The app runs by using Docker. Please make sure docker is installed before attempting to run it. Use the following commands to start the app:
 
 ``` zsh
-bundle install
-rails db:drop
-rails db:create
-rails db:seed
-rails assets:precompile
-rails s
+docker compose build
+docker compose up
 ``` 
+
+To populate the database, open another terminal and run the following commands:
+
+````
+docker exec -it goodreads_app bash
+rails db:seed
+````

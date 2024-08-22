@@ -1,12 +1,12 @@
 services:
   db:
-    container_name: my_database_container
+    container_name: goodreads_db
     image: mongo:6.0
     restart: always
     ports:
     - "27017:27017"
   web:
-    container_name: my_web_container
+    container_name: goodreads_app
     build: .
     command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -p 3000 -b '0.0.0.0'"
     volumes:
@@ -14,5 +14,5 @@ services:
     ports:
     - "3000:3000"
     depends_on:
-    - db # This responds to the service name, not the container's name.
+    - db
 
