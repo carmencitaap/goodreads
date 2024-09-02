@@ -7,13 +7,24 @@ services:
       - "27017:27017"
     command: mongod --bind_ip_all --noauth
 
+  redis:
+    container_name: goodreads_redis
+    image: redis:6.2
+    restart: always
+    ports:
+      - "6379:6379"
+
   web:
     container_name: goodreads_app
     build: .
-    command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -p 3000 -b '0.0.0.0'"
+    command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails db:seed && bundle exec rails s -p 3000 -b '0.0.0.0'"
     volumes:
       - .:/myapp
     ports:
       - "3000:3000"
     depends_on:
       - db
+      - redis
+    environment:
+      - REDIS_URL=redis://redis:6379/0
+

@@ -46,22 +46,7 @@ This app is developed with the framework [Ruby on Rails](https://rubyonrails.org
 The app runs by using Docker. Please make sure docker is installed before attempting to run it. Use the following commands to start the app:
 
 ```zsh
-docker compose build
-docker compose up
-```
+how to run the app with the populate and redis:
 
-To populate the database, open another terminal and run the following commands:
-
-```
-docker exec -it goodreads_app bash
-rails db:seed
-```
-
---
-
-```
-To run the docker-compose with the file of seed in case that doesnt work proporly:
-
-        docker-compose up -d
-        docker-compose exec web bundle exec rails db:seed
+        docker-compose up --build
 ```
