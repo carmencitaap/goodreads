@@ -4,15 +4,16 @@ services:
     image: mongo:6.0
     restart: always
     ports:
-    - "27017:27017"
+      - "27017:27017"
+    command: mongod --bind_ip_all --noauth
+
   web:
     container_name: goodreads_app
     build: .
     command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -p 3000 -b '0.0.0.0'"
     volumes:
-    - .:/myapp
+      - .:/myapp
     ports:
-    - "3000:3000"
+      - "3000:3000"
     depends_on:
-    - db
-
+      - db

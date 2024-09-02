@@ -299,6 +299,21 @@ concat-map@0.0.1:
   resolved "https://registry.yarnpkg.com/concat-map/-/concat-map-0.0.1.tgz#d8a96bd77fd68df7793a73036a3ba0d5405d477b"
   integrity sha512-/Srv4dswyQNBfohGpz9o6Yb3Gz3SrUDqBH5rTuhGR7ahtlbYKnVxw2bCFMRljaA7EXHaXZ8wsHdodFvbkhKmqg==
 
+datatables.net-bs4@^2.1.3:
+  version "2.1.5"
+  resolved "https://registry.yarnpkg.com/datatables.net-bs4/-/datatables.net-bs4-2.1.5.tgz#d2418fdcb89a68916778d6b4131b536679e53cd7"
+  integrity sha512-i3Q9xAtstCke3Wa/zetxsj6tqU8qjMD3Og0/fQDTFRvY5PdjTLhbIlCKYNIClwA1txx+knGb4HDP9mr+C2f6Cg==
+  dependencies:
+    datatables.net "2.1.5"
+    jquery ">=1.7"
+
+datatables.net@2.1.5:
+  version "2.1.5"
+  resolved "https://registry.yarnpkg.com/datatables.net/-/datatables.net-2.1.5.tgz#8324f46e4e292bb6336cd93865190f4302b160a5"
+  integrity sha512-DgbQaVmT4GuQJ2DzGRt3lNAep++iuM8/Xbr3QIrWQwE7JnZPMSOaAtKFCqkE8HnDIr18jByY6tMy0Sb6atbGqw==
+  dependencies:
+    jquery ">=1.7"
+
 debug@^4:
   version "4.3.6"
   resolved "https://registry.yarnpkg.com/debug/-/debug-4.3.6.tgz#2ab2c38fbaffebf8aa95fdfe6d88438c7a13c52b"
@@ -482,6 +497,11 @@ is-number@^7.0.0:
   version "7.0.0"
   resolved "https://registry.yarnpkg.com/is-number/-/is-number-7.0.0.tgz#7535345b896734d5f80c4d06c50955527a14f12b"
   integrity sha512-41Cifkg6e8TylSpdtTpeLVMqvSBEVzTttHvERD741+pnZ8ANv0004MRL43QKPDlK9cGvNp6NZWZUBlbGXYxxng==
+
+jquery@>=1.7, jquery@^3.7.1:
+  version "3.7.1"
+  resolved "https://registry.yarnpkg.com/jquery/-/jquery-3.7.1.tgz#083ef98927c9a6a74d05a6af02806566d16274de"
+  integrity sha512-m4avr8yL8kmFN8psrbFFFmB/If14iN5o9nw/NgnnM+kybDJpRsAynV2BsfpTYrTRysYUdADVD7CkUUizgkpLfg==
 
 jsonfile@^6.0.1:
   version "6.1.0"
