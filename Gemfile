@@ -64,7 +64,7 @@ group :test do
   gem "webdrivers"
 end
 
-gem 'mongoid'
+gem 'mongoid', '~> 9.0'
 
 gem 'faker'
 
@@ -73,3 +73,8 @@ gem 'kaminari'
 gem "ransack", "~> 4.0"
 
 gem 'mongoid_search'
+
+gem 'carrierwave'
+gem 'carrierwave-mongoid'
+
+gem 'envoy-proxy'

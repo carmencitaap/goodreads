@@ -3,6 +3,9 @@
 <%= render @author %>
 
 <div>
+  <% if @author.image.present? %>
+    <%= image_tag @author.image.url %>
+  <% end %> </br>
   <%= @author.name %> </br>
   <%= @author.date_of_birth %> </br>
   <%= @author.country_of_origin %> </br>

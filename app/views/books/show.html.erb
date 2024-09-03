@@ -4,7 +4,9 @@
 
 <div>
   <h1>Book Details</h1>
-
+  <% if @book.cover_image.present? %>
+    <%= image_tag @book.cover_image.url %>
+  <% end %> </br>
   <ul>
     <li> Title: <%= @book.title %> </li>
     <li> Author: <%= @book.author.name %> </li>
