@@ -71,7 +71,7 @@ Invalidate Cache on Create, Update, and Destroy:
 
 Whenever a book is created, updated, or deleted, we'll invalidate the relevant cache entries to ensure the data is fresh.
 
-All the cache data saved have the gets, like all the books for example and the total count, all the CRUD functionalities, in the books, authors, reviews and in the sales. Algo the cache save the top 10 rated books and the top 50 selling books
+All the cache data saved have the gets, like all the books for example and the total count, all the CRUD functionalities, in the books, authors, reviews and in the sales. Algo the cache save the top 10 rated books and the top 50 selling books. Also author_stats
 
 How to test redis cache:
 
@@ -93,6 +93,11 @@ docker-compose exec web rails console
          - Rails.cache.write("book/#{book_id}", book)
          - puts cached_book.title
          - Rails.cache.read("books/page/1")
-            - To check if the book are saved in the respective page
+         - Rails.cache.read("authors/page/1")
+         - Rails.cache.read("reviews/page/1")
+         - Rails.cache.read("sales/page/1")
+            - To check if there are saved in the respective page
          - Rails.cache.read("books/total_count")
             - Reponse: 300
+         - Rails.cache.read("authors/total_count")
+            - Response: 50

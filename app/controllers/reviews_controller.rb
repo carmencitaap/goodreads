@@ -84,26 +84,28 @@ class ReviewsController < ApplicationController
 
   private
 
-    # Use callbacks to share common setup or constraints between actions.
-    def set_review
-      # Use the cache if available
-      cache_key = "review/#{params[:id]}"
-      @review = Rails.cache.fetch(cache_key, expires_in: 12.hours) do
-        Review.find(params[:id])
-      end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_review
+    # Use the cache if available
+    cache_key = "review/#{params[:id]}"
+    @review = Rails.cache.fetch(cache_key, expires_in: 12.hours) do
+      Review.find(params[:id])
     end
+  end
 
-    # Only allow a list of trusted parameters through.
-    def review_params
-      params.require(:review).permit(:review, :upvote, :book_id, :score)
-    end
+  # Only allow a list of trusted parameters through.
+  def review_params
+    params.require(:review).permit(:review, :upvote, :book_id, :score)
+  end
 
-    # Purge related caches when data is modified
-    def purge_cache
-      Rails.cache.delete("review/#{@review.id}")
-      Rails.cache.delete("reviews/total_count")
-      (1..@current_page).each do |page|
-        Rails.cache.delete("reviews/page/#{page}")
-      end
+  # Purge related caches when data is modified
+  def purge_cache
+    Rails.cache.delete("review/#{@review.id}")
+    Rails.cache.delete("reviews/total_count")
+    
+    total_pages = (Rails.cache.fetch("reviews/total_count") { Review.count } / 10.0).ceil
+    (1..total_pages).each do |page|
+      Rails.cache.delete("reviews/page/#{page}")
     end
+  end
 end
