@@ -75,4 +75,5 @@ gem "ransack", "~> 4.0"
 gem 'mongoid_search'
 
 gem 'redis'
+
 gem 'redis-rails'

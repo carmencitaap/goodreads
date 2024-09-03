@@ -70,3 +70,29 @@ Summary of Redis Purposes:
 Invalidate Cache on Create, Update, and Destroy:
 
 Whenever a book is created, updated, or deleted, we'll invalidate the relevant cache entries to ensure the data is fresh.
+
+All the cache data saved have the gets, like all the books for example and the total count, all the CRUD functionalities, in the books, authors, reviews and in the sales. Algo the cache save the top 10 rated books and the top 50 selling books
+
+How to test redis cache:
+
+docker-compose exec web rails console
+
+      Inside console:
+
+      - To check connections:
+
+         - Rails.cache.write("test_key", "Hello, Redis!")
+            - reposne like "OK" if its working
+
+         - Rails.cache.read("test_key")
+            - response like "Hello, Redis!"
+
+      - To check the data of cache:
+
+         - Book.first
+         - Rails.cache.write("book/#{book_id}", book)
+         - puts cached_book.title
+         - Rails.cache.read("books/page/1")
+            - To check if the book are saved in the respective page
+         - Rails.cache.read("books/total_count")
+            - Reponse: 300

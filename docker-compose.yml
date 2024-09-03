@@ -26,5 +26,5 @@ services:
       - db
       - redis
     environment:
-      - REDIS_URL=redis://redis:6379/0
+      - REDIS_URL=redis://redis:6379/1
 
