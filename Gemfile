@@ -68,8 +68,10 @@ gem 'mongoid'
 
 gem 'faker'
 
-gem 'kaminari'
-
 gem "ransack", "~> 4.0"
 
 gem 'mongoid_search'
+
+gem 'opensearch-rails'
+
+gem 'opensearch-model'

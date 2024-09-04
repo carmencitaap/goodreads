@@ -48,3 +48,6 @@ The app runs by using Docker. Please make sure docker is installed before attemp
 ```zsh
 docker-compose up --build
 ```
+
+
+OpenSearch::Model y OpenSearch::Model::Callbacks: Estas inclusiones permiten que el modelo se indexe automáticamente en OpenSearch cuando se crean, actualizan o eliminan documentos.

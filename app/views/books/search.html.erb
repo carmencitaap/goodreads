@@ -1,0 +1,62 @@
+<div class="container my-4">
+  <%= form_tag search_books_path, method: :get, class: "form-inline mb-4" do %>
+    <div class="form-group mr-2">
+      <%= text_field_tag :query, params[:query], placeholder: "Search books by title or summary...", class: "form-control" %>
+      <%= submit_tag "Search!", class: "btn btn-primary" %>
+    </div>
+  <% end %>
+
+  <h1>Books</h1>
+
+  <% if @books.any? %>
+    <ul class="list-unstyled">
+      <% @books.each do |book| %>
+        <li class="mb-3">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title"><%= book.title %></h5>
+              <p class="card-text"><%= book.summary %></p>
+            </div>
+          </div>
+        </li>
+      <% end %>
+    </ul>
+  <% else %>
+    <p class="alert alert-info">No books found for '<%= params[:query] %>'</p>
+  <% end %>
+</div>
+
+<style>
+  .container {
+    margin: 0 auto;
+    padding: 1rem;
+  }
+
+  .form-inline .form-control {
+    width: auto;
+    display: inline-block;
+  }
+
+  .card {
+    border: 1px solid #ddd;
+    border-radius: 0.25rem;
+    box-shadow: 0 0 0.125rem rgba(0,0,0,0.2);
+  }
+
+  .card-body {
+    padding: 1rem;
+  }
+
+  .list-unstyled {
+    padding-left: 0;
+  }
+
+  .list-unstyled li {
+    margin-bottom: 1rem;
+  }
+
+  .alert-info {
+    padding: 0.75rem 1.25rem;
+    margin: 0;
+  }
+</style>

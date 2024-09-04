@@ -63,6 +63,19 @@ class BooksController < ApplicationController
     end
   end
 
+  def search
+    if params[:query].present?
+      @books = Book.search(params[:query]).records.to_a
+    else
+      @books = []
+    end
+
+    respond_to do |format|
+      format.html # search.html.erb
+      format.json { render json: @books }
+    end
+  end
+
   def top_10_rated_books
     @top_books = Book.collection.aggregate([
       {

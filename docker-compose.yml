@@ -7,13 +7,29 @@ services:
       - "27017:27017"
     command: mongod --bind_ip_all --noauth
 
+  opensearch:
+    image: opensearchproject/opensearch:2.7.0
+    container_name: goodreads_opensearch
+    environment:
+      - discovery.type=single-node
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    ports:
+      - "9200:9200"
+      - "9600:9600"
+
   web:
     container_name: goodreads_app
     build: .
-    command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails db:seed && bundle exec rails s -p 3000 -b '0.0.0.0'"
+    command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails db:seed && bundle exec rails runner 'Book.import' && bundle exec rails s -p 3000 -b '0.0.0.0'"
     volumes:
       - .:/myapp
     ports:
       - "3000:3000"
     depends_on:
       - db
+      - opensearch
+    environment:
+      - OPENSEARCH_URL=http://opensearch:9200
