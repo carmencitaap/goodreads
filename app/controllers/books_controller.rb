@@ -10,11 +10,26 @@ class BooksController < ApplicationController
       @books = Book.search(params[:search_query]).records
     else
       @books = Book.limit(per_page).offset(offset)
+
+    cache_key = "books/page/#{page}"
+
+    @total_books = Rails.cache.fetch("books/total_count", expires_in: 12.hours) do
+      Book.count
+    end
+
+    @books = Rails.cache.fetch(cache_key, expires_in: 12.hours) do
+      Book.limit(per_page).offset(offset).to_a
+          
+
     end
   end
 
   # GET /books/1 or /books/1.json
   def show
+    cache_key = "book/#{params[:id]}"
+    @book = Rails.cache.fetch(cache_key, expires_in: 12.hours) do
+      Book.find(params[:id])
+    end
   end
 
   # GET /books/new
@@ -32,6 +47,7 @@ class BooksController < ApplicationController
 
     respond_to do |format|
       if @book.save
+        clear_books_cache
         format.html { redirect_to book_url(@book), notice: "Book was successfully created." }
         format.json { render :show, status: :created, location: @book }
       else
@@ -45,6 +61,7 @@ class BooksController < ApplicationController
   def update
     respond_to do |format|
       if @book.update(book_params)
+        clear_books_cache
         format.html { redirect_to book_url(@book), notice: "Book was successfully updated." }
         format.json { render :show, status: :ok, location: @book }
       else
@@ -57,6 +74,7 @@ class BooksController < ApplicationController
   # DELETE /books/1 or /books/1.json
   def destroy
     @book.destroy!
+    clear_books_cache
 
     respond_to do |format|
       format.html { redirect_to books_url, notice: "Book was successfully destroyed." }
@@ -65,47 +83,50 @@ class BooksController < ApplicationController
   end
 
   def top_10_rated_books
-    @top_books = Book.collection.aggregate([
-      {
-        '$lookup': {
-          'from': 'reviews',
-          'localField': '_id',
-          'foreignField': 'book_id',
-          'as': 'reviews'
+    cache_key = "top_10_rated_books"
+    @top_books = Rails.cache.fetch(cache_key, expires_in: 12.hours) do
+      Book.collection.aggregate([
+        {
+          '$lookup': {
+            'from': 'reviews',
+            'localField': '_id',
+            'foreignField': 'book_id',
+            'as': 'reviews'
+          }
+        },
+        {
+          "$unwind": "$reviews"
+        },
+        {
+          '$lookup': {
+            'from': 'authors',
+            'localField': 'author_id',
+            'foreignField': '_id',
+            'as': 'author'
+          }
+        },
+        {
+          "$unwind": "$author"
+        },
+        {
+          "$group": {
+            _id: '$_id',
+            title: { "$first": '$title' },
+            summary: { "$first": '$summary' },
+            date_of_publication: { "$first": '$date_of_publication' },
+            author_name: { "$first": '$author.name' },
+            average_score: { "$avg": '$reviews.score' }
+          }
+        },
+        {
+          "$sort": { average_score: -1 }
+        },
+        {
+          "$limit": 10
         }
-      },
-      {
-        "$unwind": "$reviews"
-      },
-      {
-        '$lookup': {
-          'from': 'authors',
-          'localField': 'author_id',
-          'foreignField': '_id',
-          'as': 'author'
-        }
-      },
-      {
-        "$unwind": "$author"
-      },
-      {
-        "$group": {
-          _id: '$_id',
-          title: { "$first": '$title' },
-          summary: { "$first": '$summary' },
-          date_of_publication: { "$first": '$date_of_publication' },
-          author_name: { "$first": '$author.name' },
-          average_score: { "$avg": '$reviews.score' }
-        }
-      },
-      {
-        "$sort": { average_score: -1 }
-      },
-      {
-        "$limit": 10
-      }
-    ])
-  
+      ]).to_a
+    end
+
     respond_to do |format|
       format.html 
       format.json { render json: @top_books }
@@ -113,140 +134,143 @@ class BooksController < ApplicationController
   end
 
   def top_50_selling_books
-    book_sales = Book.collection.aggregate([
-      {
-        '$lookup': {
-          'from': 'sales',
-          'localField': '_id',
-          'foreignField': 'book_id',
-          'as': 'sales'
-        }
-      },
-      {
-        "$unwind": "$sales"
-      },
-      {
-        "$group": {
-          _id: '$_id',
-          title: { "$first": '$title' },
-          summary: { "$first": '$summary' },
-          date_of_publication: { "$first": '$date_of_publication' },
-          author_id: { "$first": '$author_id' },
-          total_sales: { "$sum": 1 } 
-        }
-      }
-    ])
-  
-    author_sales = Author.collection.aggregate([
-      {
-        '$lookup': {
-          'from': 'books',
-          'localField': '_id',
-          'foreignField': 'author_id',
-          'as': 'books'
-        }
-      },
-      {
-        "$unwind": "$books"
-      },
-      {
-        '$lookup': {
-          'from': 'sales',
-          'localField': 'books._id',
-          'foreignField': 'book_id',
-          'as': 'sales'
-        }
-      },
-      {
-        "$unwind": "$sales"
-      },
-      {
-        "$group": {
-          _id: '$_id',
-          name: { "$first": '$name' },
-          total_author_sales: { "$sum": 1 }
-        }
-      }
-    ])
-
-    top_books_by_year = Book.collection.aggregate([
-      {
-        '$lookup': {
-          'from': 'sales',
-          'localField': '_id',
-          'foreignField': 'book_id',
-          'as': 'sales'
-        }
-      },
-      {
-        "$unwind": "$sales"
-      },
-      {
-        "$addFields": {
-          "date_of_publication": {
-            "$toDate": "$date_of_publication"
+    cache_key = "top_50_selling_books"
+    @top_books = Rails.cache.fetch(cache_key, expires_in: 12.hours) do
+      book_sales = Book.collection.aggregate([
+        {
+          '$lookup': {
+            'from': 'sales',
+            'localField': '_id',
+            'foreignField': 'book_id',
+            'as': 'sales'
+          }
+        },
+        {
+          "$unwind": "$sales"
+        },
+        {
+          "$group": {
+            _id: '$_id',
+            title: { "$first": '$title' },
+            summary: { "$first": '$summary' },
+            date_of_publication: { "$first": '$date_of_publication' },
+            author_id: { "$first": '$author_id' },
+            total_sales: { "$sum": 1 } 
           }
         }
-      },
-      {
-        "$group": {
-          _id: {
-            year: "$sales.year", 
-            book_id: '$_id'
-          },
-          total_sales: { "$sum": 1 } 
+      ])
+
+      author_sales = Author.collection.aggregate([
+        {
+          '$lookup': {
+            'from': 'books',
+            'localField': '_id',
+            'foreignField': 'author_id',
+            'as': 'books'
+          }
+        },
+        {
+          "$unwind": "$books"
+        },
+        {
+          '$lookup': {
+            'from': 'sales',
+            'localField': 'books._id',
+            'foreignField': 'book_id',
+            'as': 'sales'
+          }
+        },
+        {
+          "$unwind": "$sales"
+        },
+        {
+          "$group": {
+            _id: '$_id',
+            name: { "$first": '$name' },
+            total_author_sales: { "$sum": 1 }
+          }
         }
-      },
-      {
-        "$sort": { 'total_sales': -1 }
-      },
-      {
-        "$group": {
-          _id: '$_id.year',
-          books: {
-            "$push": {
-              book_id: '$_id.book_id',
-              total_sales: '$total_sales'
+      ])
+
+      top_books_by_year = Book.collection.aggregate([
+        {
+          '$lookup': {
+            'from': 'sales',
+            'localField': '_id',
+            'foreignField': 'book_id',
+            'as': 'sales'
+          }
+        },
+        {
+          "$unwind": "$sales"
+        },
+        {
+          "$addFields": {
+            "date_of_publication": {
+              "$toDate": "$date_of_publication"
             }
           }
+        },
+        {
+          "$group": {
+            _id: {
+              year: "$sales.year", 
+              book_id: '$_id'
+            },
+            total_sales: { "$sum": 1 } 
+          }
+        },
+        {
+          "$sort": { 'total_sales': -1 }
+        },
+        {
+          "$group": {
+            _id: '$_id.year',
+            books: {
+              "$push": {
+                book_id: '$_id.book_id',
+                total_sales: '$total_sales'
+              }
+            }
+          }
+        },
+        {
+          "$project": {
+            year: '$_id',
+            top_books: { "$slice": ['$books', 5] }
+          }
         }
-      },
-      {
-        "$project": {
-          year: '$_id',
-          top_books: { "$slice": ['$books', 5] }
-        }
-      }
-    ])
-  
-    author_sales_hash = author_sales.reduce({}) do |hash, author|
-      hash[author['_id']] = author['total_author_sales']
-      hash
-    end
-  
-    top_books_by_year_hash = top_books_by_year.reduce({}) do |hash, year_data|
-      year_data['top_books'].each do |book_data|
-        hash[book_data['book_id']] ||= []
-        hash[book_data['book_id']] << year_data['year']
+      ])
+    
+      author_sales_hash = author_sales.reduce({}) do |hash, author|
+        hash[author['_id']] = author['total_author_sales']
+        hash
       end
-      hash
+    
+      top_books_by_year_hash = top_books_by_year.reduce({}) do |hash, year_data|
+        year_data['top_books'].each do |book_data|
+          hash[book_data['book_id']] ||= []
+          hash[book_data['book_id']] << year_data['year']
+        end
+        hash
+      end
+    
+      book_sales.map do |book|
+        author = Author.collection.find(_id: book['author_id']).first
+        publication_year = Date.parse(book['date_of_publication']).year
+        {
+          id: book['_id'],
+          title: book['title'],
+          summary: book['summary'],
+          date_of_publication: book['date_of_publication'],
+          author_id: book['author_id'],
+          author_name: author['name'],
+          total_sales: book['total_sales'],
+          total_author_sales: author_sales_hash[book['author_id']],
+          top_5_in_year: top_books_by_year_hash[book['_id']]&.include?(publication_year)
+        }
+      end.sort_by { |book| -book[:total_sales] }.first(50)
     end
-  
-    @top_books = book_sales.map do |book|
-      author = Author.collection.find(_id: book['author_id']).first
-      publication_year = Date.parse(book['date_of_publication']).year
-      {
-        id: book['_id'],
-        title: book['title'],
-        summary: book['summary'],
-        date_of_publication: book['date_of_publication'],
-        author_id: book['author_id'],
-        author_name: author['name'],
-        total_sales: book['total_sales'],
-        total_author_sales: author_sales_hash[book['author_id']],
-        top_5_in_year: top_books_by_year_hash[book['_id']]&.include?(publication_year)
-      }
-    end.sort_by { |book| -book[:total_sales] }.first(50)
   
     respond_to do |format|
       format.html
@@ -258,11 +282,22 @@ class BooksController < ApplicationController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_book
-    @book = Book.find(params[:id])
+    cache_key = "book/#{params[:id]}"
+    @book = Rails.cache.fetch(cache_key, expires_in: 12.hours) do
+      Book.find(params[:id])
+    end
   end
 
   # Only allow a list of trusted parameters through.
   def book_params
     params.require(:book).permit(:title, :date_of_publication, :summary, :author_id)
+  end
+
+  # Clear related cache when books are created, updated, or deleted.
+  def clear_books_cache
+    Rails.cache.delete("books/total_count")
+    Rails.cache.delete_matched("books/page/*")
+    Rails.cache.delete("top_10_rated_books")
+    Rails.cache.delete("top_50_selling_books")
   end
 end
