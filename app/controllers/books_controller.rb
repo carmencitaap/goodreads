@@ -1,11 +1,15 @@
 class BooksController < ApplicationController
   before_action :set_book, only: %i[ show edit update destroy ]
 
-  # GET /books or /books.json
   def index
     per_page = 10
     page = (params[:page] || 1).to_i
     offset = (page - 1) * per_page
+
+    if params[:search_query].present? && ENV['ELASTICSEARCH_URL'].present?
+      @books = Book.search(params[:search_query]).records
+    else
+      @books = Book.limit(per_page).offset(offset)
 
     cache_key = "books/page/#{page}"
 
@@ -15,6 +19,8 @@ class BooksController < ApplicationController
 
     @books = Rails.cache.fetch(cache_key, expires_in: 12.hours) do
       Book.limit(per_page).offset(offset).to_a
+          
+
     end
   end
 

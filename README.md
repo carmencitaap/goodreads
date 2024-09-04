@@ -61,6 +61,11 @@ Run Ruby on Rails, MongoDB and Redis:
 Run Ruby on Rails, MongoDB and ElasticSearch:
 
    docker-compose -f docker-compose.redis.yml up --build
+   
+   #cambiar el nombre esto era cuando los 3 eran en docker-compose.yml y sin el exec seed.db en cmd
+   docker-compose up --build
+   docker-compose exec web bundle exec rails db:seed
+
 ```
 
 ```zsh

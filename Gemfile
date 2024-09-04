@@ -74,6 +74,10 @@ gem "ransack", "~> 4.0"
 
 gem 'mongoid_search'
 
+gem 'elasticsearch-rails'
+
+gem 'elasticsearch-model'
+
 gem 'redis'
 
 gem 'redis-rails'
