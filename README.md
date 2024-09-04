@@ -45,15 +45,18 @@ This app is developed with the framework [Ruby on Rails](https://rubyonrails.org
 
 The app runs by using Docker. Please make sure docker is installed before attempting to run it. Use the following commands to start the app:
 
-```
-docker-compose up --build
-```
-
 ```zsh
-how to run the app with the populate and redis:
+Run Ruby on Rails with MongoDB:
 
         docker-compose up --build
 ```
+
+```zsh
+Run Ruby on Rails, MongoDB and Redis:
+
+      docker-compose -f docker-compose.redis.yml up --build
+```
+
 
 How to test redis cache:
 
