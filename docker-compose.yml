@@ -7,6 +7,13 @@ services:
       - "27017:27017"
     command: mongod --bind_ip_all --noauth
 
+  redis:
+    container_name: goodreads_redis
+    image: redis:6.2
+    restart: always
+    ports:
+      - "6379:6379"
+
   web:
     container_name: goodreads_app
     build: .
@@ -17,3 +24,7 @@ services:
       - "3000:3000"
     depends_on:
       - db
+      - redis
+    environment:
+      - REDIS_URL=redis://redis:6379/1
+

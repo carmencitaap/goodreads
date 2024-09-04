@@ -45,6 +45,41 @@ This app is developed with the framework [Ruby on Rails](https://rubyonrails.org
 
 The app runs by using Docker. Please make sure docker is installed before attempting to run it. Use the following commands to start the app:
 
-```zsh
+```
 docker-compose up --build
 ```
+
+```zsh
+how to run the app with the populate and redis:
+
+        docker-compose up --build
+```
+
+How to test redis cache:
+
+docker-compose exec web rails console
+
+      Inside console:
+
+      - To check connections:
+
+         - Rails.cache.write("test_key", "Hello, Redis!")
+            - reposne like "OK" if its working
+
+         - Rails.cache.read("test_key")
+            - response like "Hello, Redis!"
+
+      - To check the data of cache:
+
+         - Book.first
+         - Rails.cache.write("book/#{book_id}", book)
+         - puts cached_book.title
+         - Rails.cache.read("books/page/1")
+         - Rails.cache.read("authors/page/1")
+         - Rails.cache.read("reviews/page/1")
+         - Rails.cache.read("sales/page/1")
+            - To check if there are saved in the respective page
+         - Rails.cache.read("books/total_count")
+            - Reponse: 300
+         - Rails.cache.read("authors/total_count")
+            - Response: 50
