@@ -10,10 +10,30 @@ services:
   web:
     container_name: goodreads_app
     build: .
-    command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails db:seed && bundle exec rails s -p 3000 -b '0.0.0.0'"
+    command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -p 3000 -b '0.0.0.0'"
     volumes:
       - .:/myapp
     ports:
       - "3000:3000"
     depends_on:
       - db
+    environment:
+      - ELASTICSEARCH_URL=http://elasticsearch:9200
+  
+  elasticsearch:
+    container_name: elasticsearch
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.10.0
+    environment:
+      - node.name=es01
+      - cluster.name=es-cluster
+      - discovery.type=single-node
+      - ES_JAVA_OPTS=-Xms512m -Xmx512m
+      - xpack.security.enabled=false  # Disable security
+      - xpack.security.transport.ssl.enabled=false
+      - xpack.security.http.ssl.enabled=false
+    ports:
+      - "9200:9200"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1

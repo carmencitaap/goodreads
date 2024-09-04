@@ -10,6 +10,12 @@ class BooksController < ApplicationController
 
     @total_books = Book.count
     @books = Book.limit(per_page).offset(offset)
+
+    if params[:search_query].present?
+      @books = Book.search(params[:search_query]).records
+    else
+      @books = Book.all
+    end
   end
 
   # GET /books/1 or /books/1.json
