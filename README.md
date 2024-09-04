@@ -48,19 +48,40 @@ The app runs by using Docker. Please make sure docker is installed before attemp
 ```zsh
 Run Ruby on Rails with MongoDB:
 
-        docker-compose up --build
+   docker-compose up --build
 ```
 
 ```zsh
 Run Ruby on Rails, MongoDB and Redis:
 
-      docker-compose -f docker-compose.redis.yml up --build
+   docker-compose -f docker-compose.redis.yml up --build
 ```
 
+```zsh
+Run Ruby on Rails, MongoDB and ElasticSearch:
 
-How to test redis cache:
+   docker-compose -f docker-compose.redis.yml up --build
+```
 
-docker-compose exec web rails console
+```zsh
+Run Ruby on Rails, MongoDB and Reverse Proxy - Envoy:
+
+   docker-compose -f docker-compose.redis.yml up --build
+```
+
+```zsh
+Run Ruby on Rails, MongoDB, Redis, ElasticSearch and Reverse Proxy - Envoy:
+
+   docker-compose -f docker-compose.redis.yml up --build
+```
+
+## How to test redis cache:
+
+### Run in another console:
+
+    docker-compose exec web rails console
+
+--
 
       Inside console:
 
