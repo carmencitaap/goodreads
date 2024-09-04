@@ -47,4 +47,5 @@ The app runs by using Docker. Please make sure docker is installed before attemp
 
 ```zsh
 docker-compose up --build
+docker-compose exec web bundle exec rails db:seed
 ```

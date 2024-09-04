@@ -1,20 +1,15 @@
 class BooksController < ApplicationController
   before_action :set_book, only: %i[ show edit update destroy ]
 
-  # GET /books or /books.json
   def index
-    #@books = Book.all
     per_page = 10
     page = (params[:page] || 1).to_i
     offset = (page - 1) * per_page
 
-    @total_books = Book.count
-    @books = Book.limit(per_page).offset(offset)
-
-    if params[:search_query].present?
+    if params[:search_query].present? && ENV['ELASTICSEARCH_URL'].present?
       @books = Book.search(params[:search_query]).records
     else
-      @books = Book.all
+      @books = Book.limit(per_page).offset(offset)
     end
   end
 

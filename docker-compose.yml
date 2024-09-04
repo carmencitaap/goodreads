@@ -1,3 +1,5 @@
+version: '3.8'
+
 services:
   db:
     container_name: goodreads_db
@@ -6,6 +8,24 @@ services:
     ports:
       - "27017:27017"
     command: mongod --bind_ip_all --noauth
+
+  elasticsearch:
+    container_name: elasticsearch
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.10.0
+    environment:
+      - node.name=es01
+      - cluster.name=es-cluster
+      - discovery.type=single-node
+      - ES_JAVA_OPTS=-Xms512m -Xmx512m
+      - xpack.security.enabled=false
+      - xpack.security.transport.ssl.enabled=false
+      - xpack.security.http.ssl.enabled=false
+    ports:
+      - "9200:9200"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
 
   web:
     container_name: goodreads_app
@@ -17,23 +37,6 @@ services:
       - "3000:3000"
     depends_on:
       - db
+      - elasticsearch
     environment:
       - ELASTICSEARCH_URL=http://elasticsearch:9200
-  
-  elasticsearch:
-    container_name: elasticsearch
-    image: docker.elastic.co/elasticsearch/elasticsearch:8.10.0
-    environment:
-      - node.name=es01
-      - cluster.name=es-cluster
-      - discovery.type=single-node
-      - ES_JAVA_OPTS=-Xms512m -Xmx512m
-      - xpack.security.enabled=false  # Disable security
-      - xpack.security.transport.ssl.enabled=false
-      - xpack.security.http.ssl.enabled=false
-    ports:
-      - "9200:9200"
-    ulimits:
-      memlock:
-        soft: -1
-        hard: -1
