@@ -13,7 +13,7 @@ static_resources:
             name: local_route
             virtual_hosts:
             - name: books_service
-              domains: ["*"]
+              domains: ["app.localhost"]
               routes:
               - match:
                   prefix: "/"

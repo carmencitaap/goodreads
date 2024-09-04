@@ -12,4 +12,9 @@ class Book
   belongs_to :author
   has_many :reviews
   has_many :sales
+
+  def custom_storage_path
+    "authors/#{author.name.parameterize}"
+  end
+
 end
