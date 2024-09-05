@@ -11,4 +11,8 @@ class Author
   mount_uploader :image, ImageUploader
 
   has_many :books, dependent: :destroy
+
+  def store_dir
+    "authors/#{name.parameterize}/images"
+  end
 end
