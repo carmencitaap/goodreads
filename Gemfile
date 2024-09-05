@@ -68,9 +68,9 @@ gem 'mongoid'
 
 gem 'faker'
 
-gem 'kaminari'
-
 gem "ransack", "~> 4.0"
+
+gem 'kaminari'
 
 gem 'mongoid_search'
 
