@@ -46,5 +46,66 @@ This app is developed with the framework [Ruby on Rails](https://rubyonrails.org
 The app runs by using Docker. Please make sure docker is installed before attempting to run it. Use the following commands to start the app:
 
 ```zsh
-docker-compose up --build
+Run Ruby on Rails with MongoDB:
+
+   docker-compose up --build
 ```
+
+```zsh
+Run Ruby on Rails, MongoDB and Redis:
+
+   docker-compose -f docker-compose.redis.yml up --build
+```
+
+```zsh
+Run Ruby on Rails, MongoDB and ElasticSearch:
+
+   docker-compose -f docker-compose.elasticsearch.yml up --build
+   docker-compose -f docker-compose.elasticsearch.yml exec web bundle exec rails db:seed
+
+```
+
+```zsh
+Run Ruby on Rails, MongoDB and Reverse Proxy - Envoy:
+
+   XXX
+```
+
+```zsh
+Run Ruby on Rails, MongoDB, Redis, ElasticSearch and Reverse Proxy - Envoy:
+
+   XXX
+```
+
+## How to test redis cache:
+
+### Run in another console:
+
+    docker-compose exec web rails console
+
+--
+
+      Inside console:
+
+      - To check connections:
+
+         - Rails.cache.write("test_key", "Hello, Redis!")
+            - reposne like "OK" if its working
+
+         - Rails.cache.read("test_key")
+            - response like "Hello, Redis!"
+
+      - To check the data of cache:
+
+         - Book.first
+         - Rails.cache.write("book/#{book_id}", book)
+         - puts cached_book.title
+         - Rails.cache.read("books/page/1")
+         - Rails.cache.read("authors/page/1")
+         - Rails.cache.read("reviews/page/1")
+         - Rails.cache.read("sales/page/1")
+            - To check if there are saved in the respective page
+         - Rails.cache.read("books/total_count")
+            - Reponse: 300
+         - Rails.cache.read("authors/total_count")
+            - Response: 50

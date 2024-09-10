@@ -68,13 +68,22 @@ gem 'mongoid', '~> 9.0'
 
 gem 'faker'
 
-gem 'kaminari'
-
 gem "ransack", "~> 4.0"
+
+gem 'kaminari'
 
 gem 'mongoid_search'
 
 gem 'carrierwave'
+
 gem 'carrierwave-mongoid'
 
 gem 'envoy-proxy'
+
+gem 'elasticsearch-rails'
+
+gem 'elasticsearch-model'
+
+gem 'redis'
+
+gem 'redis-rails'

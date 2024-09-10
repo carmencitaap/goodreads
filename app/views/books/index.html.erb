@@ -4,6 +4,13 @@
 
 <%= link_to "New book", new_book_path, class: "btn btn-success" %>
 
+<% if ENV['ELASTICSEARCH_URL'].present? %>
+  <%= form_tag(books_path, method: :get) do %>
+    <%= text_field_tag :search_query, params[:search_query], placeholder: "Search books with the search engine ElasticSearch ...", class: "form-control" %>
+    <%= submit_tag 'Search with ElasticSeach', class: "btn btn-primary mt-2" %>
+  <% end %>
+<% end %>
+
 <div id="books" class="row" style="margin-left: 10px; margin-top: 5px">
   <% @books.each_with_index do |book, index| %>
     <div class="col-md-3 mb-4">
@@ -24,25 +31,33 @@
 
 <div class="pagination">
   <% if params[:page].to_i > 1 %>
-    <%= link_to "Previous", books_path(page: params[:page].to_i - 1), class: "btn btn-primary" %>
+    <% if params[:search_query].present? %>
+      <%= link_to "Previous", books_path(page: params[:page].to_i - 1, search_query: params[:search_query]), class: "btn btn-primary" %>
+    <% else %>
+      <%= link_to "Previous", books_path(page: params[:page].to_i - 1), class: "btn btn-primary" %>
+    <% end %>
   <% end %>
 
-  <% if @total_books > params[:page].to_i * 10 %>
-    <%= link_to "Next", books_path(page: params[:page].to_i + 1), class: "btn btn-primary" %>
+  <% if @total_books && @total_books > params[:page].to_i * 10 %>
+    <% if params[:search_query].present? %>
+      <%= link_to "Next", books_path(page: params[:page].to_i + 1, search_query: params[:search_query]), class: "btn btn-primary" %>
+    <% else %>
+      <%= link_to "Next", books_path(page: params[:page].to_i + 1), class: "btn btn-primary" %>
+    <% end %>
   <% end %>
 </div>
 
 <style>
-#books 
-{
+#books {
   display: flex;
   flex-wrap: wrap;
 }
 
 .col-md-3 {
-  flex: 0 0 25%; 
+  flex: 0 0 25%;
+}
 
 .card {
-  margin-bottom: 1rem; 
+  margin-bottom: 1rem;
 }
 </style>
