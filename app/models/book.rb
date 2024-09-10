@@ -13,8 +13,8 @@ class Book
   has_many :reviews
   has_many :sales
 
-  def custom_storage_path
-    "authors/#{author.name.parameterize}"
+  def store_dir
+    "books/#{title.parameterize}/covers"
   end
 
 end
