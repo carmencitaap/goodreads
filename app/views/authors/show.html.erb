@@ -4,14 +4,18 @@
 
 <div>
   <% if @author.image.present? %>
-    <%= image_tag @author.image.url %>
+    <%= image_tag @author.image.url, alt: @author.name, class: "img-fluid" %> <!-- Mostrar imagen del autor -->
   <% end %> </br>
-  <%= @author.name %> </br>
-  <%= @author.date_of_birth %> </br>
-  <%= @author.country_of_origin %> </br>
-  <%= @author.short_description %> </br>
-  <%= link_to "Edit this author", edit_author_path(@author) %> |
-  <%= link_to "Back to authors", authors_path %>
+
+  <ul>
+    <li> Name: <%= @author.name %> </li>
+    <li> Date of Birth: <%= @author.date_of_birth %> </li>
+    <li> Country of Origin: <%= @author.country_of_origin %> </li>
+    <li> Short Description: <%= @author.short_description %> </li>
+  </ul>
+
+  <%= link_to "Edit this author", edit_author_path(@author), class: "btn btn-primary" %> |
+  <%= link_to "Back to authors", authors_path, class: "btn btn-secondary" %>
 
   <%= button_to "Destroy this author", @author, method: :delete, class: "btn btn-danger" %>
 </div>

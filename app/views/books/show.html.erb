@@ -4,18 +4,26 @@
 
 <div>
   <h1>Book Details</h1>
+
   <% if @book.cover_image.present? %>
-    <%= image_tag @book.cover_image.url %>
+    <%= image_tag @book.cover_image.url, alt: @book.title, class: "img-fluid" %> <!-- Mostrar imagen del libro -->
   <% end %> </br>
+
   <ul>
     <li> Title: <%= @book.title %> </li>
     <li> Author: <%= @book.author.name %> </li>
+    
+    <!-- Mostrar imagen del autor si está presente -->
+    <% if @book.author.image.present? %>
+      <li> Author Image: <%= image_tag @book.author.image.url, alt: @book.author.name, class: "img-fluid" %> </li>
+    <% end %>
+
     <li> Summary: <%= @book.summary %> </li>
     <li> Publish date: <%= @book.date_of_publication %> </li>
   </ul>
 
-  <%= link_to "Edit this book", edit_book_path(@book) %> |
-  <%= link_to "Back to books", books_path %>
+  <%= link_to "Edit this book", edit_book_path(@book), class: "btn btn-primary" %> |
+  <%= link_to "Back to books", books_path, class: "btn btn-secondary" %>
 
   <%= button_to "Destroy this book", @book, method: :delete, class: "btn btn-danger" %>
 </div>

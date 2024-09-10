@@ -9,6 +9,19 @@ services:
     networks:
       - goodreads_network
 
+  envoy:
+    image: bitnami/envoy:1.31.0
+    ports:
+      - "80:80"
+    volumes: 
+      - ./config/envoy.yaml:/opt/bitnami/envoy/conf/envoy.yaml
+    depends_on:
+      - web
+    extra_hosts:
+      - "app.localhost:127.0.0.1"
+    networks:
+      - goodreads_network
+
   web:
     container_name: goodreads_app
     build: .
@@ -19,19 +32,6 @@ services:
       - "3000:3000"
     depends_on:
       - db
-    networks:
-      - goodreads_network
-
-  envoy:
-    image: bitnami/envoy:latest
-    ports:
-      - "80:80"
-    volumes: 
-      - ./config/envoy.yaml:/opt/bitnami/envoy/conf/envoy.yaml
-    depends_on:
-      - web
-    extra_hosts:
-      - "app.localhost:127.0.0.1"
     networks:
       - goodreads_network
 
