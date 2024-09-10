@@ -1,14 +1,25 @@
-<p style="color: green"><%= notice %></p>
+<p class="text-success"><%= notice %></p>
 
-<%= render @author %>
+<div class="card mb-3">
+  <div class="row no-gutters">
+    <div class="col-md-4">
+      <% if @author.image.present? %>
+        <%= image_tag @author.image.url, alt: @author.name, class: "img-fluid", style: "max-width: 378px; max-height: 378px;" %> <!-- Imagen del autor -->
+      <% else %>
+        <div class="placeholder-image" style="width: 100%; height: 378px; background-color: #f8f9fa;"></div>
+      <% end %>
+    </div>
+    <div class="col-md-8">
+      <div class="card-body">
+        <h2 class="card-title"><%= @author.name %></h2>
+        <p class="card-text"><strong>Date of Birth:</strong> <%= @author.date_of_birth %></p>
+        <p class="card-text"><strong>Country of Origin:</strong> <%= @author.country_of_origin %></p>
+        <p class="card-text"><strong>Description:</strong> <%= @author.short_description %></p>
 
-<div>
-  <%= @author.name %> </br>
-  <%= @author.date_of_birth %> </br>
-  <%= @author.country_of_origin %> </br>
-  <%= @author.short_description %> </br>
-  <%= link_to "Edit this author", edit_author_path(@author) %> |
-  <%= link_to "Back to authors", authors_path %>
-
-  <%= button_to "Destroy this author", @author, method: :delete, class: "btn btn-danger" %>
+        <%= link_to "Edit this author", edit_author_path(@author), class: "btn btn-warning" %>
+        <%= link_to "Back to authors", authors_path, class: "btn btn-secondary" %>
+        <%= button_to "Destroy this author", @author, method: :delete, class: "btn btn-danger" %>
+      </div>
+    </div>
+  </div>
 </div>

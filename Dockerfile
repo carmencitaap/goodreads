@@ -31,5 +31,8 @@ RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 # Expose port 3000 to the outside world
 EXPOSE 3000
 
+RUN rails generate uploader Image
+
+
 # Default command (this might be overridden by docker-compose)
 CMD ["bash", "-c", "rm -f tmp/pids/server.pid && bundle exec rails s -p 3000 -b '0.0.0.0'"]

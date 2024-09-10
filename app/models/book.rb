@@ -11,9 +11,17 @@ class Book
   field :summary, type: String
   field :date_of_publication, type: String
   
+  field :cover_image, type: String
+
+  mount_uploader :cover_image, ImageUploader
+  
   belongs_to :author
   has_many :reviews
   has_many :sales
+
+  def store_dir
+    "books/#{title.parameterize}/covers"
+  end
 
   def as_indexed_json(options = {})
     self.as_json(
@@ -25,4 +33,5 @@ class Book
       }
     )
   end
+
 end

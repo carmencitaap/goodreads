@@ -1,0 +1,41 @@
+services:
+  db:
+    container_name: goodreads_db
+    image: mongo:6.0
+    restart: always
+    ports:
+      - "27017:27017"
+    command: mongod --bind_ip_all --noauth
+    networks:
+      - goodreads_network
+
+  envoy:
+    image: bitnami/envoy:1.31.0
+    ports:
+      - "80:80"
+    volumes: 
+      - ./config/envoy.yaml:/opt/bitnami/envoy/conf/envoy.yaml
+    depends_on:
+      - web
+    extra_hosts:
+      - "app.localhost:127.0.0.1"
+    networks:
+      - goodreads_network
+
+  web:
+    container_name: goodreads_app
+    build: .
+    command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -p 3000 -b '0.0.0.0'"
+    volumes:
+      - .:/myapp
+      - ${PWD}/uploads:/myapp/public/uploads
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+    networks:
+      - goodreads_network
+
+networks:
+  goodreads_network:
+    driver: bridge

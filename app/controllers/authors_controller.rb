@@ -134,7 +134,7 @@ class AuthorsController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def author_params
-    params.require(:author).permit(:name, :date_of_birth, :country_of_origin, :short_description)
+    params.require(:author).permit(:name, :date_of_birth, :country_of_origin, :short_description, :image)
   end
 
   # Clear related cache when authors are created, updated, or deleted.

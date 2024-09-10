@@ -46,17 +46,17 @@ books.each do |book|
   end
 end
 
-years = (2019..2023).to_a
-books.each do |book|
-  years.each do |year|
-    random_sales_count = rand(5..50)
-    random_sales_count.times do
-      Sale.create!(
-        book_id: book.id,
-        year: year
-      )
-    end
-  end
-end
+# years = (2019..2023).to_a
+# books.each do |book|
+#   years.each do |year|
+#     random_sales_count = rand(5..50)
+#     random_sales_count.times do
+#       Sale.create!(
+#         book_id: book.id,
+#         year: year
+#       )
+#     end
+#   end
+# end
 
 puts "Data has been successfully seeded."
