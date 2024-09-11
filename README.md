@@ -71,27 +71,26 @@ Run Ruby on Rails, MongoDB and Reverse Proxy - Envoy:
 
 ```zsh
 Run Ruby on Rails, MongoDB, Redis, ElasticSearch and Reverse Proxy - Envoy:
-   
+
    docker-compose -f docker-compose.all.yml up --build
    docker-compose -f docker-compose.all.yml exec web bundle exec rails db:seed
 ```
+
 ## How to check Proxy Envoy
 
-   - Accede al contenedor de la aplicación Rails:
+- Accede al contenedor de la aplicación Rails:
 
-         docker-compose exec web bash
-         cd public/uploads
-         ls -all
+      docker-compose exec web bash
+      cd public/uploads
+      ls -all
 
-      Ver si esta la imagen 
+  Ver si esta la imagen
 
+  Another option
 
-      Another option
+      docker logs container_name
 
-         docker logs container_name
-
-      En esta se deberian ver las solicitudes del envoy donde aparece la solicitud de las imagen que se estan procesando
-
+  En esta se deberian ver las solicitudes del envoy donde aparece la solicitud de las imagen que se estan procesando
 
 ## How to test redis cache:
 
