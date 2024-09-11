@@ -5,8 +5,9 @@ Rails.application.configure do
   config.eager_load = false
   config.consider_all_requests_local = true
   config.server_timing = true
+  
+  config.web_console.whitelisted_ips = '172.18.0.0/16'
 
-  # Habilita la caché solo si Redis está disponible
   if ENV['REDIS_URL'].present?
     config.cache_store = :redis_cache_store, { url: ENV['REDIS_URL'] }
     config.action_controller.perform_caching = true

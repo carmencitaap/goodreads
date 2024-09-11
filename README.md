@@ -41,37 +41,41 @@ This is a Goodreads like application, where you can make a review for a specific
 
 The app runs by using Docker. Please make sure docker is installed before attempting to run it. Use the following commands to start the app:
 
-```zsh
 Run Ruby on Rails with MongoDB:
+
+```zsh
 
    docker-compose up --build
 ```
 
-```zsh
 Run Ruby on Rails, MongoDB and Redis:
+
+```zsh
 
    docker-compose -f docker-compose.redis.yml up --build
 ```
 
-```zsh
 Run Ruby on Rails, MongoDB and ElasticSearch:
+
+```zsh
 
    docker-compose -f docker-compose.elasticsearch.yml up --build
    docker-compose -f docker-compose.elasticsearch.yml exec web bundle exec rails db:seed
 
 ```
 
-```zsh
 Run Ruby on Rails, MongoDB and Reverse Proxy - Envoy:
+
+```zsh
 
    docker-compose -f docker-compose.proxy.yml up --build
    docker-compose -f docker-compose.proxy.yml exec web bundle exec rails db:seed
 
 ```
 
-```zsh
 Run Ruby on Rails, MongoDB, Redis, ElasticSearch and Reverse Proxy - Envoy:
 
+<<<<<<< HEAD
    docker-compose -f docker-compose.all.yml up --build
    docker-compose -f docker-compose.all.yml exec web bundle exec rails db:seed
 ```
@@ -91,11 +95,43 @@ Run Ruby on Rails, MongoDB, Redis, ElasticSearch and Reverse Proxy - Envoy:
       docker logs container_name
 
   En esta se deberian ver las solicitudes del envoy donde aparece la solicitud de las imagen que se estan procesando
+=======
+```zsh
+   
+   docker-compose -f docker-compose.all.yml up --build
+   docker-compose -f docker-compose.all.yml exec web bundle exec rails db:seed
+```
 
-## How to test redis cache:
+## How to check if Envoy Proxy is working
 
-### Run in another console:
+Access the Rails App logs in Docker desktop or with
 
+```zsh
+docker-compose logs web
+```
+
+If you want to make sure the image has been uploaded check the public directory:
+
+```zsh
+docker-compose exec web bash
+cd public/uploads
+ls -all
+```
+
+Also the logs for envoy have to be checked:
+
+```zsh
+docker-compose logs envoy
+```
+
+In both these logs there are requests for rendering the images.
+>>>>>>> 6d1c10d98979e0f196a87e7fd0b27f2e52183071
+
+## How to test redis cache
+
+### Run in another console
+
+```zsh
     docker-compose exec web rails console
 
 --
@@ -124,3 +160,4 @@ Run Ruby on Rails, MongoDB, Redis, ElasticSearch and Reverse Proxy - Envoy:
             - Reponse: 300
          - Rails.cache.read("authors/total_count")
             - Response: 50
+```
