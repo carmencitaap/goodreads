@@ -1,0 +1,77 @@
+version: '3.8'
+
+services:
+  db:
+    container_name: goodreads_db
+    image: mongo:6.0
+    restart: always
+    ports:
+      - "27017:27017"
+    command: mongod --bind_ip_all --noauth
+    networks:
+      - goodreads_network
+
+  redis:
+    container_name: goodreads_redis
+    image: redis:6.2
+    restart: always
+    ports:
+      - "6379:6379"
+    networks:
+      - goodreads_network
+
+  elasticsearch:
+    container_name: elasticsearch
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.10.0
+    environment:
+      - node.name=es01
+      - cluster.name=es-cluster
+      - discovery.type=single-node
+      - ES_JAVA_OPTS=-Xms512m -Xmx512m
+      - xpack.security.enabled=false
+      - xpack.security.transport.ssl.enabled=false
+      - xpack.security.http.ssl.enabled=false
+    ports:
+      - "9200:9200"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    networks:
+      - goodreads_network
+
+  envoy:
+    image: bitnami/envoy:1.31.0
+    ports:
+      - "80:80"
+    volumes:
+      - ./config/envoy.yaml:/opt/bitnami/envoy/conf/envoy.yaml
+    depends_on:
+      - web
+    extra_hosts:
+      - "app.localhost:127.0.0.1"
+    networks:
+      - goodreads_network
+
+  web:
+    container_name: goodreads_app
+    build: .
+    command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -p 3000 -b '0.0.0.0'"
+    volumes:
+      - .:/myapp
+      - ${PWD}/uploads:/myapp/public/uploads
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+      - redis
+      - elasticsearch
+    environment:
+      - REDIS_URL=redis://redis:6379/1
+      - ELASTICSEARCH_URL=http://elasticsearch:9200
+    networks:
+      - goodreads_network
+
+networks:
+  goodreads_network:
+    driver: bridge

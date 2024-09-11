@@ -37,10 +37,6 @@ This is a Goodreads like application, where you can make a review for a specific
    - book_id (CHAR)
    - year (INT)
 
-## Architecture
-
-This app is developed with the framework [Ruby on Rails](https://rubyonrails.org/), with a [MongoDB](https://www.mongodb.com/) database.
-
 ## How to run the application
 
 The app runs by using Docker. Please make sure docker is installed before attempting to run it. Use the following commands to start the app:
@@ -68,14 +64,34 @@ Run Ruby on Rails, MongoDB and ElasticSearch:
 ```zsh
 Run Ruby on Rails, MongoDB and Reverse Proxy - Envoy:
 
-   XXX
+   docker-compose -f docker-compose.proxy.yml up --build
+   docker-compose -f docker-compose.proxy.yml exec web bundle exec rails db:seed
+
 ```
 
 ```zsh
 Run Ruby on Rails, MongoDB, Redis, ElasticSearch and Reverse Proxy - Envoy:
-
-   XXX
+   
+   docker-compose -f docker-compose.all.yml up --build
+   docker-compose -f docker-compose.all.yml exec web bundle exec rails db:seed
 ```
+## How to check Proxy Envoy
+
+   - Accede al contenedor de la aplicación Rails:
+
+         docker-compose exec web bash
+         cd public/uploads
+         ls -all
+
+      Ver si esta la imagen 
+
+
+      Another option
+
+         docker logs container_name
+
+      En esta se deberian ver las solicitudes del envoy donde aparece la solicitud de las imagen que se estan procesando
+
 
 ## How to test redis cache:
 
