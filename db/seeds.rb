@@ -14,7 +14,7 @@ Sale.delete_all
 puts 'cleaned db'
 
 authors = []
-50.times do
+5.times do
   author = Author.create!(
     name: Faker::Name.name,
     date_of_birth: random_date(1950, 2000),
@@ -25,7 +25,7 @@ authors = []
 end
 
 books = []
-300.times do
+20.times do
   book = Book.create!(
     title: Faker::Book.title,
     summary: Faker::Lorem.paragraph,
