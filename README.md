@@ -15,43 +15,36 @@ The app runs by using Docker. Please make sure docker is installed before attemp
 Run Ruby on Rails with MongoDB:
 
 ```zsh
-
    docker-compose up --build
 ```
 
 Run Ruby on Rails, MongoDB and Redis:
 
 ```zsh
-
    docker-compose -f docker-compose.redis.yml up --build
 ```
 
-Run Ruby on Rails, MongoDB and ElasticSearch:
+Run Ruby on Rails, MongoDB and ElasticSearch and in other terminal populate the database with the second command:
 
 ```zsh
-
    docker-compose -f docker-compose.elasticsearch.yml up --build
    docker-compose -f docker-compose.elasticsearch.yml exec web bundle exec rails db:seed
-
 ```
 
-Run Ruby on Rails, MongoDB and Reverse Proxy - Envoy:
+Run Ruby on Rails, MongoDB and Reverse Proxy - Envoy and in other terminal populate the database with the second command:
 
 ```zsh
-
    docker-compose -f docker-compose.proxy.yml up --build
    docker-compose -f docker-compose.proxy.yml exec web bundle exec rails db:seed
-
 ```
 
-Run Ruby on Rails, MongoDB, Redis, ElasticSearch and Reverse Proxy - Envoy:
+Run Ruby on Rails, MongoDB, Redis, ElasticSearch and Reverse Proxy - Envoy and in other terminal populate the database with the second command:
 
 ```zsh
-
    docker-compose -f docker-compose.all.yml up --build
    docker-compose -f docker-compose.all.yml exec web bundle exec rails db:seed
-
 ```
+
 
 ## How to check if Envoy Proxy is working
 
@@ -110,3 +103,4 @@ In both these logs there are requests for rendering the images.
          + Rails.cache.read("authors/total_count")
             - Response: e.g. 50
 ```
+
