@@ -7,13 +7,12 @@ class BooksController < ApplicationController
     offset = (page - 1) * per_page
   
     if params[:search_query].present? && ENV['ELASTICSEARCH_URL'].present?
-      # Búsqueda con Elasticsearch con paginación
       @books = Book.search(params[:search_query]).page(page).per(per_page).records
       @total_books = Book.search(params[:search_query]).results.total
     else
       cache_key = "books/page/#{page}"
   
-      # Manejar la caché de Redis en caso de que esté disponible
+      # Manage caché with Redis if it's available.
       begin
         @total_books = Rails.cache.fetch("books/total_count", expires_in: 12.hours) do
           Book.count
@@ -23,14 +22,14 @@ class BooksController < ApplicationController
           Book.limit(per_page).offset(offset).to_a
         end
       rescue => e
-        # Si Redis no está disponible, obtener datos directamente desde MongoDB
-        Rails.logger.warn("Redis no disponible: #{e.message}")
+        # If Redis is not available, obtain data from mongo directly.
+        Rails.logger.warn("Redis is not available: #{e.message}")
         @total_books = Book.count
         @books = Book.limit(per_page).offset(offset).to_a
       end
     end
   
-    # Paginación
+    # Pagination
     @current_page = page
     @total_pages = (@total_books.to_f / per_page).ceil
   end

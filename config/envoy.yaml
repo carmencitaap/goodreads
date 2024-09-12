@@ -26,7 +26,7 @@ static_resources:
           access_log:
           - name: envoy.access_loggers.stream
             typed_config:
-              "@type": type.googleapis.com/envoy.extensions.access_loggers.stream.v3.StdoutAccessLog  # Logs to stdout
+              "@type": type.googleapis.com/envoy.extensions.access_loggers.stream.v3.StdoutAccessLog
   clusters:
   - name: rails_service
     connect_timeout: 0.25s

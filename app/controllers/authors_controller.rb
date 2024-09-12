@@ -137,7 +137,6 @@ class AuthorsController < ApplicationController
     params.require(:author).permit(:name, :date_of_birth, :country_of_origin, :short_description, :image)
   end
 
-  # Clear related cache when authors are created, updated, or deleted.
   def clear_authors_cache
     Rails.cache.delete("authors/total_count")
     Rails.cache.delete_matched("authors/page/*")
